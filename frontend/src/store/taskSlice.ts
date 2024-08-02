@@ -16,6 +16,15 @@ export const updateTaskStatus = createAsyncThunk('tasks/updateTaskStatus', async
   return response.data;
 });
 
+export const editTask = createAsyncThunk('tasks/editTask', async ({ id, title, completed }: { id: string; title: string; completed: boolean }) => {
+  const response = await api.editTask(id, title, completed);
+  return response.data;
+});
+
+export const deleteTask = createAsyncThunk('tasks/deleteTask', async (id: string) => {
+  await api.deleteTask(id);
+  return id;
+});
 interface Task {
   _id: string;
   title: string;
@@ -65,6 +74,15 @@ const taskSlice = createSlice({
         if (index !== -1) {
           state.tasks[index] = action.payload;
         }
+      })
+      .addCase(editTask.fulfilled, (state, action) => {
+        const index = state.tasks.findIndex((task) => task._id === action.payload._id);
+        if (index !== -1) {
+          state.tasks[index] = action.payload;
+        }
+      })
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        state.tasks = state.tasks.filter((task) => task._id !== action.payload);
       });
   },
 });
