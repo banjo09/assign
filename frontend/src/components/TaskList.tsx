@@ -1,23 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchTasks, updateTaskStatus, editTask, deleteTask } from '../store/taskSlice';
-import { RootState, AppDispatch } from '../store';
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchTasks,
+  updateTaskStatus,
+  editTask,
+  deleteTask,
+} from "../store/taskSlice";
+import { RootState, AppDispatch } from "../store";
 
 const TaskList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { tasks, status, error, filter } = useSelector((state: RootState) => state.tasks);
+  const { tasks, status, error, filter } = useSelector(
+    (state: RootState) => state.tasks
+  );
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editTitle, setEditTitle] = useState('');
+  const [editTitle, setEditTitle] = useState("");
 
   useEffect(() => {
-    if (status === 'idle') {
+    if (status === "idle") {
       dispatch(fetchTasks());
     }
   }, [status, dispatch]);
 
   const filteredTasks = tasks.filter((task) => {
-    if (filter === 'active') return !task.completed;
-    if (filter === 'completed') return task.completed;
+    if (filter === "active") return !task.completed;
+    if (filter === "completed") return task.completed;
     return true;
   });
 
@@ -35,17 +42,21 @@ const TaskList: React.FC = () => {
     dispatch(deleteTask(id));
   };
 
-  if (status === 'loading') return <div>Loading...</div>;
-  if (status === 'failed') return <div>Error: {error}</div>;
+  if (status === "loading") return <div>Loading...</div>;
+  if (status === "failed") return <div>Error: {error}</div>;
 
   return (
-    <ul>
+    <ul className="task-list">
       {filteredTasks.map((task) => (
-        <li key={task._id}>
+        <li key={task._id} className="task-item">
           <input
             type="checkbox"
             checked={task.completed}
-            onChange={() => dispatch(updateTaskStatus({ id: task._id, completed: !task.completed }))}
+            onChange={() =>
+              dispatch(
+                updateTaskStatus({ id: task._id, completed: !task.completed })
+              )
+            }
           />
           {editingId === task._id ? (
             <>
@@ -54,15 +65,23 @@ const TaskList: React.FC = () => {
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
               />
-              <button onClick={() => handleSaveEdit(task._id, task.completed)}>Save</button>
+              <button onClick={() => handleSaveEdit(task._id, task.completed)}>
+                Save
+              </button>
             </>
           ) : (
             <>
-              <span style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>{task.title}</span>
-              <button onClick={() => handleEdit(task._id, task.title)}>Edit</button>
+              <span className={task.completed ? "completed" : ""}>
+                {task.title}
+              </span>
+              <button onClick={() => handleEdit(task._id, task.title)}>
+                Edit
+              </button>
             </>
           )}
-          <button onClick={() => handleDelete(task._id)}>Delete</button>
+          <button onClick={() => handleDelete(task._id)} className="delete">
+            Delete
+          </button>{" "}
         </li>
       ))}
     </ul>
