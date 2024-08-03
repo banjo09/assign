@@ -8,14 +8,32 @@ const TaskFilter: React.FC = () => {
   const filter = useSelector((state: RootState) => state.tasks.filter);
 
   return (
-    <div>
-      <button onClick={() => dispatch(setFilter('all'))} disabled={filter === 'all'}>
+    <div className="task-filter">
+      {/* <button onClick={() => dispatch(setFilter('all'))} disabled={filter === 'all'}>
         All
       </button>
       <button onClick={() => dispatch(setFilter('active'))} disabled={filter === 'active'}>
         Active
       </button>
       <button onClick={() => dispatch(setFilter('completed'))} disabled={filter === 'completed'}>
+        Completed
+      </button> */}
+      <button 
+        onClick={() => dispatch(setFilter('all'))} 
+        className={filter === 'all' ? 'active' : ''}
+      >
+        All
+      </button>
+      <button 
+        onClick={() => dispatch(setFilter('active'))} 
+        className={filter === 'active' ? 'active' : ''}
+      >
+        Active
+      </button>
+      <button 
+        onClick={() => dispatch(setFilter('completed'))} 
+        className={filter === 'completed' ? 'active' : ''}
+      >
         Completed
       </button>
     </div>
